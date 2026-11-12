@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17182f"><title>My Transformation</title>
+<style>
+:root{--bg:#f4f5f9;--ink:#191a2e;--muted:#6c7085;--card:#fff;--accent:#5556c9;--line:#e7e8f0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,sans-serif}
+header{background:#17182f;color:white;padding:24px 18px 20px;border-radius:0 0 22px 22px}
+h1{font-size:23px;margin:0 0 5px}header p{margin:0;color:#c9cae0;font-size:13px}
+main{padding:15px;max-width:760px;margin:auto}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--card);padding:15px;border-radius:16px;margin-bottom:12px;box-shadow:0 3px 14px #2020400a}
+.kicker{color:var(--muted);font-size:12px}.big{font-size:25px;font-weight:750;margin:5px 0}
+h2{font-size:17px;margin:0 0 12px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input,button,select{font:inherit;border-radius:10px;padding:10px;border:1px solid var(--line);background:white;color:var(--ink)}
+input{min-width:0;flex:1;width:100%}button{background:var(--accent);color:white;border:0;font-weight:650;cursor:pointer}
+button.secondary{background:#eeeef8;color:#34356d}button.small{padding:8px 11px}
+label{display:block;font-size:12px;color:var(--muted);margin:8px 0 5px}
+.check{display:flex;align-items:center;gap:9px;margin:9px 0}.check input{width:auto;flex:none}
+.progress{height:9px;background:#eeeef6;border-radius:9px;overflow:hidden}.progress span{display:block;height:100%;background:var(--accent)}
+nav{display:flex;gap:7px;overflow:auto;margin:0 0 12px}nav button{white-space:nowrap}.hidden{display:none}
+li{margin:7px 0;color:#45475b}.muted{color:var(--muted);font-size:12px}
+.photo{width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-top:8px}
+</style><link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"></head><body>
+<header><h1>My Transformation</h1><p>Small habits. Consistent progress.</p></header>
+<main>
+<nav><button onclick="tab('home')">Overview</button><button class="secondary" onclick="tab('logs')">Daily logs</button><button class="secondary" onclick="tab('skin')">Skincare</button><button class="secondary" onclick="tab('report')">Weekly review</button></nav>
+<section id="home">
+<div class="grid">
+<div class="card"><div class="kicker">Current weight</div><div class="big" id="weightTop">96 kg</div><div class="muted">First milestone: 85 kg</div></div>
+<div class="card"><div class="kicker">Water today</div><div class="big" id="waterTop">0 ml</div><div class="muted">Personal daily target: 2,500 ml</div></div>
+</div>
+<div class="card"><h2>Transformation progress</h2><div class="row"><span id="lost">11 kg to first milestone</span></div><div class="progress"><span id="bar" style="width:0%"></span></div><p class="muted">Use weekly averages rather than judging one day's weight.</p></div>
+<div class="card"><h2>Quick water tracker</h2><div class="row"><button onclick="addWater(250)">+250 ml</button><button onclick="addWater(500)">+500 ml</button><input id="customWater" type="number" placeholder="Custom ml"><button class="small" onclick="addWater(Number(document.getElementById('customWater').value))">Add</button></div></div>
+<div class="card"><h2>Today's habits</h2><div id="habitSummary" class="muted">Track your workout and skincare in Daily logs.</div></div>
+</section>
+<section id="logs" class="hidden">
+<div class="card"><h2>Weight & waist</h2><label>Weight (kg)</label><input id="weight" type="number" step=".1" placeholder="e.g. 95.5"><label>Waist (cm, optional)</label><input id="waist" type="number" step=".1" placeholder="Waist"><button style="margin-top:10px" onclick="saveWeight()">Save measurement</button><ul id="weightHistory"></ul></div>
+<div class="card"><h2>Workout log</h2><label>Workout / activity</label><input id="workout" placeholder="e.g. Full body strength / 30 min walk"><label>Duration (minutes)</label><input id="duration" type="number" placeholder="30"><button style="margin-top:10px" onclick="saveWorkout()">Save workout</button><ul id="workoutHistory"></ul></div>
+<div class="card"><h2>Progress photo</h2><p class="muted">Photos stay in this app's local storage. Take photos in similar lighting and pose.</p><input id="photo" type="file" accept="image/*" capture="environment"><button style="margin-top:10px" onclick="savePhoto()">Save photo</button><div id="photos"></div></div>
+</section>
+<section id="skin" class="hidden">
+<div class="card"><h2>Morning routine</h2><div class="check"><input type="checkbox" id="m1" onchange="saveChecks()"><span>Gentle cleanser</span></div><div class="check"><input type="checkbox" id="m2" onchange="saveChecks()"><span>Lightweight moisturiser</span></div><div class="check"><input type="checkbox" id="m3" onchange="saveChecks()"><span>SPF 50 sunscreen</span></div></div>
+<div class="card"><h2>Evening routine</h2><div class="check"><input type="checkbox" id="e1" onchange="saveChecks()"><span>Gentle cleanser</span></div><div class="check"><input type="checkbox" id="e2" onchange="saveChecks()"><span>Lightweight moisturiser</span></div><div class="check"><input type="checkbox" id="e3" onchange="saveChecks()"><span>Optional salicylic cleanser (2–3 evenings weekly only if tolerated)</span></div><p class="muted">Stop products that cause persistent irritation. A dermatologist can assess deeper acne scars.</p></div>
+</section>
+<section id="report" class="hidden">
+<div class="card"><h2>Weekly review</h2><p id="reportText">Your weekly summary will appear here as you log activity.</p><button onclick="makeReport()">Refresh weekly report</button></div>
+<div class="card"><h2>Backup</h2><button onclick="backup()">Export my data</button> <button class="secondary" onclick="resetData()">Reset all data</button><p class="muted">Export a backup before changing or uninstalling the app.</p></div>
+</section>
+</main>
+<script>
+const get=(k,d)=>JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
+const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let data=get('mt_data',{weights:[{date:new Date().toISOString().slice(0,10),weight:96,waist:null}],water:{},workouts:[],checks:{},photos:[]});
+function today(){return new Date().toISOString().slice(0,10)}
+function save(){put('mt_data',data);render()}
+function tab(id){['home','logs','skin','report'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id))}
+function addWater(n){if(!n||n<1)return;data.water[today()]=(data.water[today()]||0)+n;save();document.getElementById('customWater').value=''}
+function saveWeight(){let w=Number(document.getElementById('weight').value),z=Number(document.getElementById('waist').value)||null;if(!w||w<25||w>350)return alert('Enter a valid weight');data.weights.push({date:today(),weight:w,waist:z});save();document.getElementById('weight').value='';document.getElementById('waist').value=''}
+function saveWorkout(){let n=document.getElementById('workout').value.trim(),m=Number(document.getElementById('duration').value)||0;if(!n)return;data.workouts.push({date:today(),name:n,minutes:m});save();document.getElementById('workout').value='';document.getElementById('duration').value=''}
+function saveChecks(){['m1','m2','m3','e1','e2','e3'].forEach(k=>data.checks[k+'_'+today()]=document.getElementById(k).checked);save()}
+function savePhoto(){let f=document.getElementById('photo').files[0];if(!f)return;let r=new FileReader();r.onload=()=>{data.photos.push({date:today(),src:r.result});save()};r.readAsDataURL(f)}
+function makeReport(){let since=new Date();since.setDate(since.getDate()-6);let d=since.toISOString().slice(0,10),ws=data.weights.filter(x=>x.date>=d),wo=data.workouts.filter(x=>x.date>=d),water=Object.entries(data.water).filter(([k])=>k>=d).map(x=>x[1]);let avg=water.length?Math.round(water.reduce((a,b)=>a+b,0)/water.length):0;document.getElementById('reportText').innerText=`Last 7 days: ${ws.length} weigh-in(s), ${wo.length} workout(s), ${wo.reduce((a,b)=>a+b.minutes,0)} workout minutes. Average logged water: ${avg} ml/day. Latest weight: ${ws.length?ws[ws.length-1].weight+' kg':'not logged'}.`}
+function backup(){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=u;a.download='my-transformation-backup.json';a.click();URL.revokeObjectURL(u)}
+function resetData(){if(confirm('Delete all local app data? Export a backup first.')){localStorage.removeItem('mt_data');data={weights:[{date:today(),weight:96,waist:null}],water:{},workouts:[],checks:{},photos:[]};save()}}
+function render(){let latest=data.weights[data.weights.length-1]?.weight||96;document.getElementById('weightTop').innerText=latest+' kg';let water=data.water[today()]||0;document.getElementById('waterTop').innerText=water+' ml';document.getElementById('lost').innerText=Math.max(0,latest-85).toFixed(1)+' kg to first milestone';document.getElementById('bar').style.width=Math.max(0,Math.min(100,(96-latest)/11*100))+'%';document.getElementById('weightHistory').innerHTML=data.weights.slice(-8).reverse().map(x=>`<li>${x.date}: ${x.weight} kg ${x.waist?'· waist '+x.waist+' cm':''}</li>`).join('');document.getElementById('workoutHistory').innerHTML=data.workouts.slice(-8).reverse().map(x=>`<li>${x.date}: ${x.name} (${x.minutes} min)</li>`).join('');['m1','m2','m3','e1','e2','e3'].forEach(k=>document.getElementById(k).checked=!!data.checks[k+'_'+today()]);document.getElementById('habitSummary').innerText=`${data.workouts.filter(x=>x.date===today()).length} workout(s) logged today. ${water} ml water recorded.`;document.getElementById('photos').innerHTML=data.photos.slice(-3).map(x=>`<div class="muted">${x.date}<img class="photo" src="${x.src}"></div>`).join('')}
+render();
+</script><script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});</script></body></html>
